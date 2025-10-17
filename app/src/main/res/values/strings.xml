@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Bookly</string>
+    <string name="title_home">Библиотека</string>
+    <string name="title_dashboard">Жанры</string>
+    <string name="title_notifications">Подборки</string>
+    <string name="title_fav">Избраное</string>
+    <string name="title_prof">Профиль</string>
+</resources>
