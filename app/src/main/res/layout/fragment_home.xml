@@ -3,49 +3,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="?attr/colorSurface"
+    android:textColor="?attr/colorOnSurface"
+    android:paddingBottom="72dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
-        <!-- Header -->
+        <!-- Header Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/white"
-            app:strokeColor="@color/black"
-            app:strokeWidth="1dp"
-            app:cardCornerRadius="12dp">
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="12dp">
 
                 <!-- Title and Add Button -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Библиотека"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnBackground" />
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/addBookButton"
-                        style="@style/Widget.MaterialComponents.Button"
+                        style="@style/Widget.Material3.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Добавить книгу"
@@ -55,16 +56,17 @@
 
                 <!-- Search Bar -->
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:startIconDrawable="@drawable/ic_search">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/searchEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Поиск книг, авторов..." />
+                        android:layout_height="50dp"
+                        android:hint="Поиск книг, авторов..."
+                        android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -73,24 +75,21 @@
                     android:id="@+id/bookCountText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
+                    android:layout_marginTop="8dp"
                     android:text="0 книг в библиотеке"
-                    android:textSize="12sp"
+                    android:textAlignment="center"
                     android:textColor="?attr/colorOnSurfaceVariant"
-                    android:layout_marginTop="8dp" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Content -->
+        <!-- Search Results -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Search Results Header -->
             <LinearLayout
                 android:id="@+id/searchResultsHeader"
                 android:layout_width="match_parent"
@@ -107,7 +106,7 @@
                     android:text="Результаты поиска"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/searchResultsCount"
@@ -117,7 +116,7 @@
 
             </LinearLayout>
 
-            <!-- Search Results -->
+            <!-- Search Results Recycler -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/searchResultsRecyclerView"
                 android:layout_width="match_parent"
@@ -130,6 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
+                app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="12dp"
                 android:layout_marginTop="32dp">
 
@@ -156,21 +156,21 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- All Books -->
+            <!-- All Books Recycler -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/booksRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <!-- Empty State -->
+            <!-- Empty Library State -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/emptyState"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
+                app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="12dp"
                 android:layout_marginTop="32dp">
 
@@ -195,7 +195,7 @@
                         android:textAlignment="center"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="?attr/colorOnBackground"
+                        android:textColor="?attr/colorOnSurface"
                         android:layout_marginBottom="8dp" />
 
                     <TextView
@@ -209,18 +209,15 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/emptyStateAddButton"
-                        style="@style/Widget.MaterialComponents.Button"
+                        style="@style/Widget.Material3.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Добавить книгу"
                         app:icon="@drawable/ic_add" />
 
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-
     </LinearLayout>
-
 </ScrollView>

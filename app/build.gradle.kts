@@ -49,6 +49,7 @@ android {
 }
 
 dependencies {
+
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.compose.material)
     // --- Room ---

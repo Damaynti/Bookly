@@ -1,5 +1,6 @@
 package com.example.book.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,9 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.core.widget.doAfterTextChanged
+import androidx.navigation.fragment.findNavController
+import com.example.book.R
+import com.example.book.ui.AddBook.AddBookActivity
 
 class HomeFragment : Fragment() {
 
@@ -145,19 +149,23 @@ class HomeFragment : Fragment() {
         }
 
         binding.addBookButton.setOnClickListener {
-            listener?.onAddBook()
+            val intent = Intent(requireContext(), AddBookActivity::class.java)
+            startActivity(intent)
         }
 
         binding.emptyStateAddButton.setOnClickListener {
-            listener?.onAddBook()
+            val intent = Intent(requireContext(), AddBookActivity::class.java)
+            startActivity(intent)
         }
+
+
     }
 
     private fun updateBookCount(count: Int) {
         val bookCountText = when {
-            count % 10 == 1 && count % 100 != 11 -> "$count книга"
-            count % 10 in 2..4 && count % 100 !in 12..14 -> "$count книги"
-            else -> "$count книг"
+            count % 10 == 1 && count % 100 != 11 -> "$count книга в библиотеке"
+            count % 10 in 2..4 && count % 100 !in 12..14 -> "$count книги в библиотеке"
+            else -> "$count книг в библиотеке"
         }
         binding.bookCountText.text = bookCountText
     }

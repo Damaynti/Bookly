@@ -21,7 +21,8 @@
         android:title="@string/title_fav" />
     <item
         android:id="@+id/navigation_prof"
-        android:icon="@drawable/ic_person"
+        android:icon="@drawable/ic_settings"
         android:title="@string/title_prof" />
+
 
 </menu>

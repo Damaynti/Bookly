@@ -1,38 +1,66 @@
 package com.example.book.ui.prof
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.book.databinding.FragmentProfBinding
 
 class ProfFragment : Fragment() {
 
     private var _binding: FragmentProfBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val ProfViewModel =
-            ViewModelProvider(this).get(ProfViewModel::class.java)
-
         _binding = FragmentProfBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textProf
-        ProfViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val prefs = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+        // Восстанавливаем состояние темы
+        val isDark = prefs.getBoolean("darkTheme", false)
+        binding.themeSwitch.isChecked = isDark
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDark) AppCompatDelegate.MODE_NIGHT_YES
+            else AppCompatDelegate.MODE_NIGHT_NO
+        )
+
+        // Переключатель темы
+        binding.themeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val mode = if (isChecked)
+                AppCompatDelegate.MODE_NIGHT_YES
+            else
+                AppCompatDelegate.MODE_NIGHT_NO
+
+            // Сохраняем выбор
+            requireContext()
+                .getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .edit()
+                .putBoolean("darkTheme", isChecked)
+                .apply()
+
+            // Меняем тему и пересоздаём activity, чтобы цвета обновились
+            AppCompatDelegate.setDefaultNightMode(mode)
+            requireActivity().recreate()
         }
-        return root
+
+
+        // Выход из аккаунта
+        binding.btnLogout.setOnClickListener {
+            // Очистка данных пользователя
+
+        }
     }
 
     override fun onDestroyView() {

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="?attr/colorSurface"
+    android:background="?attr/colorSurface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="?attr/colorSurface">
+
+        <!-- Обложка книги -->
+        <ImageView
+            android:id="@+id/ivCover"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:background="?attr/colorPrimaryContainer"/>
+
+        <!-- Текст и кнопки -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="10dp">
+
+            <!-- Название -->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Мастер и Маргарита"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
+                tools:text="Мастер и Маргарита" />
+
+            <!-- Автор -->
+            <TextView
+                android:id="@+id/tvAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Михаил Булгаков"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:paddingTop="2dp"
+                tools:text="Михаил Булгаков" />
+
+            <!-- Жанр (в овале) -->
+            <TextView
+                android:id="@+id/tvGenre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:text="Классическая литература"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="13sp"
+                tools:text="Классическая литература" />
+
+            <!-- Кнопка "Читать" и сердечко -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Читать"
+                    android:textStyle="bold"
+                    android:backgroundTint="?attr/colorSurface"
+                    android:textColor="?attr/colorOnSurface"
+                    app:icon="@drawable/ic_read"
+                    app:iconGravity="textStart"
+                    app:iconPadding="6dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"/>
+
+
+                <ImageButton
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="12dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_fav_red"
+                    app:tint="?attr/favoriteColor" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

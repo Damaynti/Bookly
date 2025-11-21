@@ -1,3 +1,4 @@
+// UserBookDao.kt (дополненный)
 package com.example.book.data
 
 import androidx.room.*
@@ -28,4 +29,34 @@ interface UserBookDao {
         ORDER BY createdAt DESC
     """)
     fun searchBooks(query: String): Flow<List<UserBook>>
+
+    // Новые методы для коллекций
+    @Query("SELECT * FROM collections ORDER BY createdAt DESC")
+    fun getAllCollections(): Flow<List<BookCollection>>
+
+    @Query("SELECT * FROM collections WHERE id = :collectionId")
+    suspend fun getCollectionById(collectionId: String): BookCollection?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCollection(collection: BookCollection)
+
+    @Delete
+    suspend fun deleteCollection(collection: BookCollection)
+
+    @Update
+    suspend fun updateCollection(collection: BookCollection)
+
+    // Методы для получения книг по ID
+    @Query("SELECT * FROM user_books WHERE id IN (:bookIds)")
+    suspend fun getBooksByIds(bookIds: List<String>): List<UserBook>
+
+    // Методы для настроек
+    @Query("SELECT * FROM app_settings WHERE id = 'default_settings'")
+    fun getAppSettings(): Flow<AppSettings?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAppSettings(settings: AppSettings)
+
+    @Update
+    suspend fun updateAppSettings(settings: AppSettings)
 }

@@ -4,5 +4,6 @@
     <string name="title_dashboard">Жанры</string>
     <string name="title_notifications">Подборки</string>
     <string name="title_fav">Избраное</string>
-    <string name="title_prof">Профиль</string>
+    <string name="title_prof">Настройки</string>
+    <string name="profile_image">Фото профиля</string>
 </resources>
