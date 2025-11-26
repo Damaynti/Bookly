@@ -1,5 +1,4 @@
 package com.example.book.data
-
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -14,7 +13,5 @@ data class UserBook(
     val coverImage: String,
     val rating: Int,
     val createdAt: String,
-    val userId: String,
-    val userName: String,
     val isFavorite: Boolean = false
 )

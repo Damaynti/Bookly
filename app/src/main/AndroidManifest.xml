@@ -24,13 +24,13 @@
         </activity>
 
         <activity
-            android:name=".ui.AddBook.AddBookActivity"
+            android:name=".viemodel.AddBook.AddBookActivity"
             android:label="Добавить книгу"
             android:exported="false" />
 
         <!-- Добавьте эти активности -->
         <activity
-            android:name=".ui.AddBooksToCollection.AddBooksToCollectionActivity"
+            android:name=".viemodel.AddBooksToCollection.AddBooksToCollectionActivity"
             android:label="Создать подборку"
             android:exported="false" />
 

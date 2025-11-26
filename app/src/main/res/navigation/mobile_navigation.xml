@@ -7,29 +7,29 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.book.ui.home.HomeFragment"
+        android:name="com.example.book.viemodel.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home"/>
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.book.ui.dashboard.GenresFragment"
+        android:name="com.example.book.viemodel.dashboard.GenresFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_genres" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.book.ui.notifications.NotFragment"
+        android:name="com.example.book.viemodel.notifications.NotFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/navigation_fav"
-        android:name="com.example.book.ui.fav.FavFragment"
+        android:name="com.example.book.viemodel.fav.FavFragment"
         android:label="@string/title_fav"
         tools:layout="@layout/fragment_fav" />
     <fragment
         android:id="@+id/navigation_prof"
-        android:name="com.example.book.ui.prof.ProfFragment"
+        android:name="com.example.book.viemodel.prof.ProfFragment"
         android:label="@string/title_prof"
         tools:layout="@layout/fragment_prof" />
 

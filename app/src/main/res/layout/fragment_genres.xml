@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/colorSurface"
     android:paddingBottom="?attr/actionBarSize"
     android:fitsSystemWindows="true">
@@ -41,6 +42,37 @@
                 android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Заголовок выбранного жанра (скрыт изначально) -->
+        <LinearLayout
+            android:id="@+id/selectedGenreHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp">
+
+            <!-- Кнопка назад -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                app:iconTint="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/selectedGenreTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Фантастика"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface" />
+
+        </LinearLayout>
+
         <!-- Подзаголовок -->
         <TextView
             android:id="@+id/subtitleText"
@@ -66,7 +98,10 @@
             android:id="@+id/booksRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:clipToPadding="false"
+            android:paddingVertical="8dp"
+            tools:listitem="@layout/item_book_list" />
 
         <!-- Пустое состояние (показывается только если ничего не найдено) -->
         <com.google.android.material.card.MaterialCardView
