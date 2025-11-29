@@ -3,7 +3,6 @@ package com.example.book.viemodel.dashboard
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.book.R
 import com.example.book.databinding.ItemGenreBinding
 
 class GenreAdapter(
@@ -32,30 +31,12 @@ class GenreAdapter(
     inner class GenreViewHolder(private val binding: ItemGenreBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        // Словарь с картинками жанров
-        private val genreImages = mapOf(
-            "Классика" to R.drawable.scroll,
-            "Проза" to R.drawable.notes,
-            "Фантастика" to R.drawable.ufo,
-            "Детектив" to R.drawable.privatedetective,
-            "Романтика" to R.drawable.lovebooks,
-            "Триллер" to R.drawable.trill,
-            "Фэнтези" to R.drawable.dragon,
-            "Биография" to R.drawable.man,
-            "Бизнес" to R.drawable.briefcase,
-            "Приключения" to R.drawable.location,
-            "Поэзия" to R.drawable.fountainpen,
-            "Ужасы" to R.drawable.trill
-        )
-
-
         fun bind(genre: GenreItem) {
             binding.genreName.text = genre.name
             binding.genreCount.text = "${genre.count} книг"
 
             // Устанавливаем картинку
-            val imageRes = genreImages[genre.name] ?: R.drawable.trill
-            binding.genreImage.setImageResource(imageRes)
+            binding.genreImage.setImageResource(genre.iconRes)
 
             binding.root.setOnClickListener { onGenreClick(genre.name) }
         }

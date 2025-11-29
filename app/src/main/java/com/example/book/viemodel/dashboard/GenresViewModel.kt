@@ -2,12 +2,13 @@ package com.example.book.viemodel.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.book.R
 import com.example.book.data.UserBook
 import com.example.book.repos.UserBooksRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-data class GenreItem(val name: String, val count: Int)
+data class GenreItem(val name: String, val count: Int, val iconRes: Int)
 
 class GenresViewModel(private val repository: UserBooksRepository) : ViewModel() {
 
@@ -21,11 +22,28 @@ class GenresViewModel(private val repository: UserBooksRepository) : ViewModel()
         .map { it.isNotEmpty() }
         .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    val allGenres = listOf(
-        "Классика", "Проза", "Фантастика", "Детектив",
-        "Романтика", "Триллер", "Фэнтези", "Биография", "Бизнес",
-        "Приключения", "Поэзия", "Ужасы"
+    val genreIcons = mapOf(
+        "Классика" to R.drawable.scroll,
+        "Проза" to R.drawable.notes,
+        "Фантастика" to R.drawable.ufo,
+        "Детектив" to R.drawable.privatedetective,
+        "Романтика" to R.drawable.lovebooks,
+        "Триллер" to R.drawable.trill,
+        "Фэнтези" to R.drawable.dragon,
+        "Биография" to R.drawable.man,
+        "Бизнес" to R.drawable.briefcase,
+        "Приключения" to R.drawable.location,
+        "Поэзия" to R.drawable.fountainpen,
+        "Ужасы" to R.drawable.trill,
+        "Научная фантастика" to R.drawable.science_fiction,
+        "История" to R.drawable.history,
+        "Психология" to R.drawable.psychology,
+        "Саморазвитие" to R.drawable.self_development,
+        "Драма" to R.drawable.drama,
+        "Юмор" to R.drawable.humor
     )
+
+    val allGenres = genreIcons.keys.toList()
 
     val genres: StateFlow<List<GenreItem>> = repository.books
         .combine(_searchQuery) { books, query ->
@@ -33,7 +51,8 @@ class GenresViewModel(private val repository: UserBooksRepository) : ViewModel()
                 allGenres.map { genre ->
                     GenreItem(
                         name = genre,
-                        count = books.count { it.genre.equals(genre, ignoreCase = true) }
+                        count = books.count { it.genre.equals(genre, ignoreCase = true) },
+                        iconRes = genreIcons[genre] ?: R.drawable.book // Fallback icon
                     )
                 }
             } else emptyList()
