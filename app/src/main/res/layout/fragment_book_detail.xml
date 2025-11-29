@@ -4,7 +4,8 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true">
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
@@ -76,7 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:spacing="8dp">
+            android:spacing="8dp"
+            android:paddingBottom="80dp">
 
             <!-- Card: cover + meta -->
             <androidx.cardview.widget.CardView
