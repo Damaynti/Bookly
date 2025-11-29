@@ -22,7 +22,7 @@
             android:layout_width="60dp"
             android:layout_height="90dp"
             android:scaleType="centerCrop"
-            android:background="?attr/colorPrimary"
+            android:src="@drawable/book"
             android:contentDescription="@string/title_home" />
 
         <!-- Кнопка избранного -->
@@ -35,7 +35,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="2dp"
             android:src="@drawable/ic_fav"
-            app:tint="?attr/favoriteColor"
             android:contentDescription="@string/title_fav" />
 
         <!-- Название книги -->
@@ -44,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/bookCover"
-            android:layout_toStartOf="@id/favoriteButton"
+            android:layout_toStartOf="@+id/favoriteButton"
             android:layout_marginStart="12dp"
             android:text="Мастер и Маргарита"
             android:textStyle="bold"

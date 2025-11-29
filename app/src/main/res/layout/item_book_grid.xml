@@ -1,75 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="1dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="?attr/colorSurface">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="12dp">
 
-        <!-- Book Cover with Favorite Button -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+        <!-- Обложка книги -->
+        <ImageView
+            android:id="@+id/bookCover"
+            android:layout_width="60dp"
+            android:layout_height="90dp"
+            android:scaleType="centerCrop"
+            android:background="?attr/colorPrimary"
+            android:contentDescription="@string/title_home" />
+
+        <!-- Кнопка избранного -->
+        <ImageButton
+            android:id="@+id/favoriteButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="2dp"
+            android:src="@drawable/ic_fav"
+            app:tint="?attr/favoriteColor"
+            android:contentDescription="@string/title_fav" />
+
+        <!-- Название книги -->
+        <TextView
+            android:id="@+id/bookTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/bookCover"
+            android:layout_toStartOf="@id/favoriteButton"
+            android:layout_marginStart="12dp"
+            android:text="Мастер и Маргарита"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp"
+            tools:text="Мастер и Маргарита" />
+
+        <!-- Автор -->
+        <TextView
+            android:id="@+id/bookAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bookTitle"
+            android:layout_toEndOf="@id/bookCover"
+            android:layout_marginStart="12dp"
+            android:text="М. Булгаков"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp"
+            tools:text="М. Булгаков" />
+
+        <!-- Жанр -->
+        <TextView
+            android:id="@+id/bookGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bookAuthor"
+            android:layout_toEndOf="@id/bookCover"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_genre_chip"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:text="Классика"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="12sp"
+            tools:text="Классика" />
+
+        <!-- Дата -->
+        <LinearLayout
+            android:id="@+id/dateContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bookGenre"
+            android:layout_toEndOf="@id/bookCover"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <ImageView
-                android:id="@+id/bookCover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:background="@color/material_grey_300" />
-
-            <ImageButton
-                android:id="@+id/favoriteButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="4dp"
-                app:tint="@android:color/white" />
-
-        </RelativeLayout>
-
-        <!-- Book Info -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp">
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_calendar"
+                app:tint="?attr/colorOnSurfaceVariant" />
 
             <TextView
-                android:id="@+id/bookTitle"
-                android:layout_width="match_parent"
+                android:id="@+id/createdAt"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Book Title"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textColor="?attr/colorOnBackground" />
-
-            <TextView
-                android:id="@+id/bookAuthor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Author"
-                android:textSize="10sp"
-                android:maxLines="1"
-                android:ellipsize="end"
+                android:layout_marginStart="6dp"
                 android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_marginTop="2dp" />
-
+                android:textSize="12sp"
+                tools:text="12 дек 2024" />
         </LinearLayout>
 
-    </LinearLayout>
-
-</com.google.android.material.card.MaterialCardView>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

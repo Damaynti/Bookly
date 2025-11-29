@@ -6,4 +6,50 @@
     <string name="title_fav">Избраное</string>
     <string name="title_prof">Настройки</string>
     <string name="profile_image">Фото профиля</string>
+
+    <!-- Create/Edit Collection Screen -->
+    <string name="back">Назад</string>
+    <string name="new_collection">Новая подборка</string>
+    <string name="edit_collection">Редактировать подборку</string>
+    <string name="save">Сохранить</string>
+    <string name="cover">Обложка</string>
+    <string name="cover_image">Обложка подборки</string>
+    <string name="upload_cover">Загрузить обложку</string>
+    <string name="upload_cover_hint">Нажмите, чтобы загрузить</string>
+    <string name="upload_sub">(Необязательно)</string>
+    <string name="remove_image">Удалить изображение</string>
+    <string name="info">Основная информация</string>
+    <string name="title_label">Название</string>
+    <string name="title_hint">Введите название подборки</string>
+    <string name="description_label">Описание</string>
+    <string name="description_hint">Добавьте краткое описание</string>
+    <string name="create_collection">Создать подборку</string>
+    <string name="cancel">Отмена</string>
+
+    <!-- Collection Detail Screen -->
+    <string name="collection">Подборка</string>
+    <string name="edit">Редактировать</string>
+    <string name="collection_title">Название подборки</string>
+    <string name="collection_description">Описание подборки</string>
+    <string name="add_books">Добавить книги</string>
+    <string name="delete_collection">Удалить подборку</string>
+    <string name="no_books">В этой подборке пока нет книг</string>
+    <string name="no_books_title">Здесь пусто</string>
+    <string name="no_books_sub">Нажмите, чтобы добавить первую книгу</string>
+
+    <!-- Add Books to Collection Screen -->
+    <string name="add_books_to_collection">Добавить в подборку</string>
+    <string name="search_books_hint">Поиск книг</string>
+    <string name="selected_books_count">Выбрано: %d</string>
+
+    <!-- Book Detail Screen -->
+    <string name="book_summary">Сведения о книге</string>
+    <string name="favorite">Избранное</string>
+    <string name="book_cover">Обложка книги</string>
+    <string name="summary">Краткое содержание</string>
+    <string name="delete_book">Удалить книгу</string>
+
+    <!-- Add/Edit Book Screen -->
+    <string name="edit_book">Редактировать книгу</string>
+    <string name="save_changes">Сохранить изменения</string>
 </resources>

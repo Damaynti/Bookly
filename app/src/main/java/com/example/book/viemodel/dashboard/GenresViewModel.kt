@@ -2,12 +2,13 @@ package com.example.book.viemodel.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.book.R
 import com.example.book.data.UserBook
 import com.example.book.repos.UserBooksRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-data class GenreItem(val name: String, val count: Int)
+data class GenreItem(val name: String, val count: Int, val iconRes: Int)
 
 class GenresViewModel(private val repository: UserBooksRepository) : ViewModel() {
 
@@ -21,34 +22,52 @@ class GenresViewModel(private val repository: UserBooksRepository) : ViewModel()
         .map { it.isNotEmpty() }
         .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    val allGenres = listOf(
-        "Классика", "Проза", "Фантастика", "Детектив",
-        "Романтика", "Триллер", "Фэнтези", "Биография", "Бизнес",
-        "Приключения", "Поэзия", "Ужасы"
+    private val genreIcons = mapOf(
+        "Классика" to R.drawable.scroll,
+        "Проза" to R.drawable.notes,
+        "Фантастика" to R.drawable.ufo,
+        "Детектив" to R.drawable.privatedetective,
+        "Романтика" to R.drawable.lovebooks,
+        "Триллер" to R.drawable.trill,
+        "Фэнтези" to R.drawable.dragon,
+        "Биография" to R.drawable.man,
+        "Бизнес" to R.drawable.briefcase,
+        "Приключения" to R.drawable.location,
+        "Поэзия" to R.drawable.fountainpen,
+        "Ужасы" to R.drawable.trill,
+        "Научная фантастика" to R.drawable.science_fiction,
+        "История" to R.drawable.history,
+        "Психология" to R.drawable.psychology,
+        "Саморазвитие" to R.drawable.self_development,
+        "Драма" to R.drawable.drama,
+        "Юмор" to R.drawable.humor
     )
 
-    val genres: StateFlow<List<GenreItem>> = repository.books
+    private val allGenres = com.example.book.data.genres
+
+    val genreItems: StateFlow<List<GenreItem>> = repository.books
         .combine(_searchQuery) { books, query ->
-            if (query.isBlank()) {
-                allGenres.map { genre ->
-                    GenreItem(
-                        name = genre,
-                        count = books.count { it.genre.equals(genre, ignoreCase = true) }
-                    )
-                }
-            } else emptyList()
+            val genresToShow = if (query.isBlank()) {
+                allGenres
+            } else {
+                allGenres.filter { it.contains(query, ignoreCase = true) }
+            }
+            genresToShow.map { genreName ->
+                GenreItem(
+                    name = genreName,
+                    count = books.count { it.genre.equals(genreName, ignoreCase = true) },
+                    iconRes = genreIcons[genreName] ?: R.drawable.book // Fallback icon
+                )
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     val filteredBooks: StateFlow<List<UserBook>> = repository.books
         .combine(_selectedGenre) { books, genre ->
-            val query = _searchQuery.value
-            when {
-                query.isNotBlank() -> books.filter {
-                    it.title.contains(query, true) || it.author.contains(query, true)
-                }
-                genre != null -> books.filter { it.genre.equals(genre, true) }
-                else -> emptyList()
+            if (genre != null) {
+                books.filter { it.genre.equals(genre, ignoreCase = true) }
+            } else {
+                emptyList()
             }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
@@ -57,7 +76,7 @@ class GenresViewModel(private val repository: UserBooksRepository) : ViewModel()
         _searchQuery.value = query
     }
 
-    fun selectGenre(genre: String) {
+    fun selectGenre(genre: String?) {
         _selectedGenre.value = genre
     }
 

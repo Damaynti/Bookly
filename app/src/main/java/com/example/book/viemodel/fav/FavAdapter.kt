@@ -1,13 +1,19 @@
 package com.example.book.viemodel.fav
 
+import android.graphics.BitmapFactory
+import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.book.R
 import com.example.book.data.UserBook
 import com.example.book.databinding.ItemFavBookBinding
+import com.example.book.utils.formatDate
 
 class FavAdapter(
     private val onFavoriteClick: (UserBook) -> Unit,
@@ -26,26 +32,41 @@ class FavAdapter(
     inner class FavViewHolder(private val binding: ItemFavBookBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(book: UserBook) = with(binding) {
-            tvTitle.text = book.title
-            tvAuthor.text = book.author
-            tvGenre.text = book.genre
+        fun bind(book: UserBook) {
+            binding.bookTitle.text = book.title
+            binding.bookAuthor.text = book.author
+            binding.bookGenre.text = book.genre
+            binding.createdAt.text = formatDate(book.createdAt)
 
             // Загрузка обложки (если есть)
-            Glide.with(root.context)
-                .load(book.coverImage)
-                .centerCrop()
-                .into(ivCover)
+            loadImageFromBase64(book.coverImage, binding.bookCover)
 
             // Кнопка "Читать"
-            btnRead.setOnClickListener {
+            binding.root.setOnClickListener {
                 onReadClick(book)
             }
 
             // Сердце (удалить из избранного)
-            btnFavorite.setOnClickListener {
+            binding.favoriteButton.setOnClickListener {
                 onFavoriteClick(book)
             }
+            binding.favoriteButton.setImageResource(R.drawable.ic_fav_red)
+        }
+    }
+
+    private fun loadImageFromBase64(coverImage: String, imageView: ImageView) {
+        if (coverImage.isNotEmpty()) {
+            try {
+                val imageBytes = Base64.decode(coverImage, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                imageView.setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                // В случае ошибки используем fallback изображение
+                imageView.setImageResource(R.drawable.book)
+            }
+        } else {
+            // Если изображение пустое, используем fallback
+            imageView.setImageResource(R.drawable.book)
         }
     }
 
