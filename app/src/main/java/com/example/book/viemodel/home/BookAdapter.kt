@@ -19,7 +19,8 @@ import com.example.book.utils.formatDate
 class BookAdapter(
     private val isGridLayout: Boolean,
     private val onBookClick: (UserBook) -> Unit,
-    private val onFavoriteClick: (UserBook) -> Unit
+    private val onFavoriteClick: (UserBook) -> Unit,
+    private val onBookLongClick: ((UserBook) -> Unit)? = null
 ) : ListAdapter<UserBook, RecyclerView.ViewHolder>(BookDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -49,8 +50,11 @@ class BookAdapter(
 
         fun bind(book: UserBook) {
             binding.root.setOnClickListener { onBookClick(book) }
+            binding.root.setOnLongClickListener {
+                onBookLongClick?.invoke(book)
+                true
+            }
 
-            // Исправленная загрузка изображений - как в первом примере
             loadImageFromBase64(book.coverImage, binding.bookCover)
 
             binding.bookTitle.text = book.title
@@ -72,15 +76,17 @@ class BookAdapter(
 
         fun bind(book: UserBook) {
             binding.root.setOnClickListener { onBookClick(book) }
+            binding.root.setOnLongClickListener {
+                onBookLongClick?.invoke(book)
+                true
+            }
 
-            // Исправленная загрузка изображений - как в первом примере
             loadImageFromBase64(book.coverImage, binding.bookCover)
 
             binding.bookTitle.text = book.title
             binding.bookAuthor.text = book.author
             binding.bookGenre.text = book.genre
 
-            // Format date
             val formattedDate = formatDate(book.createdAt)
             binding.createdAt.text = formattedDate
 
@@ -102,16 +108,13 @@ class BookAdapter(
                 val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 imageView.setImageBitmap(bitmap)
             } catch (e: Exception) {
-                // В случае ошибки используем fallback изображение
                 imageView.setImageResource(R.drawable.book)
             }
         } else {
-            // Если изображение пустое, используем fallback
             imageView.setImageResource(R.drawable.book)
         }
     }
 
-    // Оставляем старый метод как альтернативный вариант (можно удалить если не нужен)
     @SuppressLint("DiscouragedApi")
     private fun loadImage(coverImage: String, imageView: ImageView) {
         val context = imageView.context

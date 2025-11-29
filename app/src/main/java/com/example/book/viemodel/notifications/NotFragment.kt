@@ -6,16 +6,24 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.book.R
 import com.example.book.databinding.FragmentNotificationsBinding
-import com.example.book.viemodel.AddBooksToCollection.CreateCollectionFragment // Импортируем активность
+import com.example.book.repos.UserBooksRepository
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class NotFragment : Fragment() {
 
     private lateinit var binding: FragmentNotificationsBinding
-    private val viewModel: NotificationsViewModel by viewModels()
+    private val viewModel: NotificationsViewModel by viewModels { NotificationsViewModelFactory(UserBooksRepository(requireContext())) }
     private lateinit var adapter: CollectionAdapter
 
     override fun onCreateView(
@@ -30,31 +38,24 @@ class NotFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Создаём адаптер без начальных данных
-        adapter = CollectionAdapter(emptyList()) {
-            // TODO: переход к деталям подборки
+        adapter = CollectionAdapter(emptyList()) { collection ->
+            val bundle = bundleOf("collectionId" to collection.id)
+            findNavController().navigate(R.id.action_navigation_notifications_to_collectionDetailFragment, bundle)
         }
 
-        // Настройка RecyclerView
         binding.collectionsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.collectionsRecyclerView.adapter = adapter
 
-        // Наблюдаем за списком коллекций
-        viewModel.collections.observe(viewLifecycleOwner) { list ->
-            adapter.updateList(list)
-
-            // Проверяем, есть ли подборки
-            if (list.isEmpty()) {
-                binding.collectionsRecyclerView.visibility = View.GONE
-                binding.emptyState.visibility = View.VISIBLE
-            } else {
-                binding.collectionsRecyclerView.visibility = View.VISIBLE
-                binding.emptyState.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.collections.collectLatest { list ->
+                adapter.updateList(list)
+                binding.collectionsRecyclerView.visibility = if (list.isEmpty()) View.GONE else View.VISIBLE
+                binding.emptyState.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
             }
         }
 
         setupSearch()
-        setupClickListeners() // Добавляем обработчики кликов
+        setupClickListeners()
     }
 
     private fun setupSearch() {
@@ -68,21 +69,22 @@ class NotFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        // Обработчик для кнопки создания в хедере
         binding.createButton.setOnClickListener {
-            openAddCollectionActivity()
+            findNavController().navigate(R.id.action_navigation_notifications_to_createCollectionFragment)
         }
 
-        // Обработчик для кнопки создания в пустом состоянии
         binding.emptyStateAddButton.setOnClickListener {
-            openAddCollectionActivity()
+            findNavController().navigate(R.id.action_navigation_notifications_to_createCollectionFragment)
         }
     }
+}
 
-    private fun openAddCollectionActivity() {
-        val fragment = CreateCollectionFragment()
-
-        // Добавляем/заменяем фрагмент через FragmentManager
-
+class NotificationsViewModelFactory(private val repository: UserBooksRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(NotificationsViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return NotificationsViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

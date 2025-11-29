@@ -127,9 +127,9 @@ class UserBooksRepository(context: Context) {
                 id = UUID.randomUUID().toString(),
                 title = title,
                 description = description,
-                coverImage = coverBase64.toString(),
+                coverImage = coverBase64 ?: "",
                 bookIds = emptyList(),
-                createdAt = TODO()
+                createdAt = Date().toString()
             )
 
             dao.insertCollection(collection)
@@ -175,19 +175,14 @@ class UserBooksRepository(context: Context) {
         }
     }
 
-    fun addBookToCollection(bookId: String, collectionId: String) {
+    fun addBooksToCollection(collectionId: String, bookIdsToAdd: List<String>) {
         scope.launch {
-            val col = dao.getCollectionById(collectionId) ?: return@launch
-
-            if (bookId in col.bookIds) {
-                Log.d(TAG, "Книга уже есть: $bookId")
-                return@launch
-            }
-
-            val updated = col.copy(bookIds = col.bookIds + bookId)
-            dao.updateCollection(updated)
-
-            Log.d(TAG, "Добавлена книга $bookId в '${col.title}'")
+            val collection = dao.getCollectionById(collectionId) ?: return@launch
+            val currentBookIds = collection.bookIds.toMutableSet()
+            currentBookIds.addAll(bookIdsToAdd)
+            val updatedCollection = collection.copy(bookIds = currentBookIds.toList())
+            dao.updateCollection(updatedCollection)
+            Log.d(TAG, "Добавлены книги в '${collection.title}'")
         }
     }
 
@@ -204,16 +199,6 @@ class UserBooksRepository(context: Context) {
             dao.updateCollection(updated)
 
             Log.d(TAG, "Книга удалена $bookId из '${col.title}'")
-        }
-    }
-
-    fun replaceBooksInCollection(collectionId: String, newBookIds: List<String>) {
-        scope.launch {
-            val col = dao.getCollectionById(collectionId) ?: return@launch
-            val updated = col.copy(bookIds = newBookIds.distinct())
-            dao.updateCollection(updated)
-
-            Log.d(TAG, "Обновлён список книг коллекции '${col.title}'")
         }
     }
 

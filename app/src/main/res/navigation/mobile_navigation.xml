@@ -21,7 +21,44 @@
         android:id="@+id/navigation_notifications"
         android:name="com.example.book.viemodel.notifications.NotFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications" >
+        <action
+            android:id="@+id/action_navigation_notifications_to_createCollectionFragment"
+            app:destination="@id/createCollectionFragment" />
+        <action
+            android:id="@+id/action_navigation_notifications_to_collectionDetailFragment"
+            app:destination="@id/collectionDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createCollectionFragment"
+        android:name="com.example.book.viemodel.collections.CreateCollectionFragment"
+        android:label="@string/new_collection"
+        tools:layout="@layout/fragment_create_collection" />
+
+    <fragment
+        android:id="@+id/collectionDetailFragment"
+        android:name="com.example.book.viemodel.collections.CollectionDetailFragment"
+        android:label="@string/collection"
+        tools:layout="@layout/fragment_collection_detail" >
+        <argument
+            android:name="collectionId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_collectionDetailFragment_to_addBooksToCollectionFragment"
+            app:destination="@id/addBooksToCollectionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addBooksToCollectionFragment"
+        android:name="com.example.book.viemodel.collections.AddBooksToCollectionFragment"
+        android:label="@string/add_books_to_collection"
+        tools:layout="@layout/fragment_add_books_to_collection" >
+        <argument
+            android:name="collectionId"
+            app:argType="string" />
+    </fragment>
+
     <fragment
         android:id="@+id/navigation_fav"
         android:name="com.example.book.viemodel.fav.FavFragment"
@@ -32,6 +69,5 @@
         android:name="com.example.book.viemodel.prof.ProfFragment"
         android:label="@string/title_prof"
         tools:layout="@layout/fragment_prof" />
-
 
 </navigation>

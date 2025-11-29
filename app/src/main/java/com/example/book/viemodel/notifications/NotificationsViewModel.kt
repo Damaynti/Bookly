@@ -1,43 +1,35 @@
 package com.example.book.viemodel.notifications
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.book.model.BookCollection
+import com.example.book.repos.UserBooksRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 
-class NotificationsViewModel : ViewModel() {
+class NotificationsViewModel(private val repository: UserBooksRepository) : ViewModel() {
 
-    private val _collections = MutableLiveData<List<BookCollection>>(emptyList())
-    val collections: LiveData<List<BookCollection>> = _collections
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
 
-    /**
-     * Добавление новой коллекции пользователем
-     */
-    fun addCollection(collection: BookCollection) {
-        val currentList = _collections.value ?: emptyList()
-        _collections.value = currentList + collection
-    }
-
-    /**
-     * Удаление коллекции
-     */
-    fun removeCollection(collection: BookCollection) {
-        val currentList = _collections.value ?: emptyList()
-        _collections.value = currentList - collection
-    }
-
-    /**
-     * Поиск по существующим коллекциям
-     */
-    fun search(query: String) {
-        val currentList = _collections.value ?: emptyList()
-        _collections.value = if (query.isEmpty()) {
-            currentList
-        } else {
-            currentList.filter {
-                it.title.contains(query, ignoreCase = true) ||
-                        it.description.contains(query, ignoreCase = true)
+    val collections: StateFlow<List<BookCollection>> = repository.collections
+        .combine(_searchQuery) { collections, query ->
+            if (query.isBlank()) {
+                collections
+            } else {
+                collections.filter { it.title.contains(query, ignoreCase = true) }
             }
         }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = emptyList()
+        )
+
+    fun search(query: String) {
+        _searchQuery.value = query
     }
 }
