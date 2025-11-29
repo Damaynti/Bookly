@@ -19,7 +19,10 @@ interface UserBookDao {
     @Query("SELECT * FROM user_books WHERE isFavorite = 1")
     fun getFavoriteBooks(): Flow<List<UserBook>>
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Query("SELECT * FROM user_books WHERE id = :bookId")
+    suspend fun getBookById(bookId: String): UserBook?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(book: UserBook)
 
     @Delete
@@ -27,6 +30,9 @@ interface UserBookDao {
 
     @Update
     suspend fun updateBook(book: UserBook)
+
+    @Query("DELETE FROM user_books")
+    suspend fun deleteAllBooks()
 
     @Query("""
         SELECT * FROM user_books
@@ -44,7 +50,7 @@ interface UserBookDao {
     @Query("SELECT * FROM collections WHERE id = :collectionId")
     suspend fun getCollectionById(collectionId: String): BookCollection?
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCollection(collection: BookCollection)
 
     @Delete
@@ -52,6 +58,9 @@ interface UserBookDao {
 
     @Update
     suspend fun updateCollection(collection: BookCollection)
+
+    @Query("DELETE FROM collections")
+    suspend fun deleteAllCollections()
 
     // Методы для получения книг по ID
     @Query("SELECT * FROM user_books WHERE id IN (:bookIds)")
@@ -61,7 +70,7 @@ interface UserBookDao {
     @Query("SELECT * FROM app_settings WHERE id = 'default_settings'")
     fun getAppSettings(): Flow<AppSettings?>
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAppSettings(settings: AppSettings)
 
     @Update

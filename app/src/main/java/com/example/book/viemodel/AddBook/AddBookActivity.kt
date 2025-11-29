@@ -271,10 +271,6 @@ class AddBookActivity : AppCompatActivity() {
                 Toast.makeText(this, "Напишите краткое содержание", Toast.LENGTH_SHORT).show()
                 return
             }
-            coverBase64.isEmpty() -> {
-                Toast.makeText(this, "Загрузите обложку книги", Toast.LENGTH_SHORT).show()
-                return
-            }
         }
 
         val id = System.currentTimeMillis().toString()

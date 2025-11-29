@@ -7,11 +7,13 @@ import android.util.Base64
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.book.R
+import com.example.book.model.BookCollection
 import com.example.book.repos.UserBooksRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.util.Date
 import java.util.UUID
 
 class CreateCollectionViewModel(private val repository: UserBooksRepository, private val context: Context) : ViewModel() {
@@ -19,7 +21,16 @@ class CreateCollectionViewModel(private val repository: UserBooksRepository, pri
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState
 
-    fun createCollection(title: String, description: String, coverImageBase64: String?) {
+    private val _collection = MutableStateFlow<BookCollection?>(null)
+    val collection: StateFlow<BookCollection?> = _collection
+
+    fun loadCollection(collectionId: String) {
+        viewModelScope.launch {
+            _collection.value = repository.getCollectionById(collectionId)
+        }
+    }
+
+    fun saveCollection(title: String, description: String, coverImageBase64: String?) {
         if (title.isBlank()) {
             _uiState.value = UiState.Error("Название не может быть пустым")
             return
@@ -27,15 +38,25 @@ class CreateCollectionViewModel(private val repository: UserBooksRepository, pri
 
         _uiState.value = UiState.Loading
 
-        val finalCoverImage = coverImageBase64 ?: getDefaultCoverImage()
-
         viewModelScope.launch {
             try {
-                repository.createCollection(
-                    title = title,
-                    description = description,
-                    coverBase64 = finalCoverImage
-                )
+                val existingCollection = _collection.value
+                if (existingCollection == null) {
+                    val finalCoverImage = coverImageBase64 ?: getDefaultCoverImage()
+                    repository.createCollection(
+                        title = title,
+                        description = description,
+                        coverBase64 = finalCoverImage
+                    )
+                } else {
+                    val finalCoverImage = coverImageBase64 ?: existingCollection.coverImage
+                    val updatedCollection = existingCollection.copy(
+                        title = title,
+                        description = description,
+                        coverImage = finalCoverImage
+                    )
+                    repository.updateCollection(updatedCollection)
+                }
                 _uiState.value = UiState.Success
             } catch (e: Exception) {
                 _uiState.value = UiState.Error("Не удалось сохранить подборку: ${e.message}")

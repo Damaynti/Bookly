@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.book.databinding.ItemGenreBinding
 
 class GenreAdapter(
-    private val onGenreClick: (String) -> Unit
+    private val onGenreClick: (GenreItem) -> Unit
 ) : RecyclerView.Adapter<GenreAdapter.GenreViewHolder>() {
 
     private val genres = mutableListOf<GenreItem>()
@@ -38,7 +38,7 @@ class GenreAdapter(
             // Устанавливаем картинку
             binding.genreImage.setImageResource(genre.iconRes)
 
-            binding.root.setOnClickListener { onGenreClick(genre.name) }
+            binding.root.setOnClickListener { onGenreClick(genre) }
         }
     }
 

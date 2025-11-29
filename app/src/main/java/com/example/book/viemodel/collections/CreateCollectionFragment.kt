@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
 
 class CreateCollectionFragment : Fragment() {
 
@@ -35,6 +36,7 @@ class CreateCollectionFragment : Fragment() {
     }
 
     private var selectedImageBase64: String? = null
+    private var collectionId: String? = null
 
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -55,6 +57,12 @@ class CreateCollectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        collectionId = arguments?.getString("collectionId")
+        if (collectionId != null) {
+            viewModel.loadCollection(collectionId!!)
+        }
+
         setupClickListeners()
         setupValidation()
         observeViewModel()
@@ -95,7 +103,7 @@ class CreateCollectionFragment : Fragment() {
                         binding.btnCreate.isEnabled = false
                     }
                     is CreateCollectionViewModel.UiState.Success -> {
-                        Snackbar.make(requireView(), "Подборка успешно создана", Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(requireView(), "Подборка успешно сохранена", Snackbar.LENGTH_LONG).show()
                         findNavController().popBackStack()
                     }
                     is CreateCollectionViewModel.UiState.Error -> {
@@ -106,6 +114,25 @@ class CreateCollectionFragment : Fragment() {
                     else -> {
                         binding.btnSave.isEnabled = true
                         binding.btnCreate.isEnabled = true
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.collection.collectLatest { collection ->
+                if (collection != null) {
+                    binding.inputTitle.setText(collection.title)
+                    binding.inputDescription.setText(collection.description)
+                    selectedImageBase64 = collection.coverImage
+                    if (!collection.coverImage.isNullOrBlank()) {
+                        try {
+                            val imageBytes = Base64.decode(collection.coverImage, Base64.DEFAULT)
+                            val decodedImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(ByteBuffer.wrap(imageBytes)))
+                            updateCoverImage(decodedImage)
+                        } catch (e: Exception) {
+                            // Handle exception
+                        }
                     }
                 }
             }
@@ -154,7 +181,7 @@ class CreateCollectionFragment : Fragment() {
         val title = binding.inputTitle.text.toString().trim()
         val description = binding.inputDescription.text.toString().trim()
 
-        viewModel.createCollection(title, description, selectedImageBase64)
+        viewModel.saveCollection(title, description, selectedImageBase64)
     }
 
     override fun onDestroyView() {

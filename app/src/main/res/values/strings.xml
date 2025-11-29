@@ -41,4 +41,15 @@
     <string name="add_books_to_collection">Добавить в подборку</string>
     <string name="search_books_hint">Поиск книг</string>
     <string name="selected_books_count">Выбрано: %d</string>
+
+    <!-- Book Detail Screen -->
+    <string name="book_summary">Сведения о книге</string>
+    <string name="favorite">Избранное</string>
+    <string name="book_cover">Обложка книги</string>
+    <string name="summary">Краткое содержание</string>
+    <string name="delete_book">Удалить книгу</string>
+
+    <!-- Add/Edit Book Screen -->
+    <string name="edit_book">Редактировать книгу</string>
+    <string name="save_changes">Сохранить изменения</string>
 </resources>

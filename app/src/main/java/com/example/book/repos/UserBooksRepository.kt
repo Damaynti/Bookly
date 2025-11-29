@@ -4,8 +4,10 @@ import android.content.Context
 import android.util.Log
 import com.example.book.data.AppDatabase
 import com.example.book.data.AppSettings
+import com.example.book.data.ExportedData
 import com.example.book.model.BookCollection
 import com.example.book.data.UserBook
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +24,41 @@ import java.util.UUID
 class UserBooksRepository(context: Context) {
     private val dao = AppDatabase.Companion.getInstance(context).userBookDao()
     private val TAG = "DATABASE_DEBUG"
+
+    suspend fun getBookById(bookId: String): UserBook? {
+        return dao.getBookById(bookId)
+    }
+
+    suspend fun updateBook(book: UserBook) {
+        dao.updateBook(book)
+    }
+
+    suspend fun deleteBook(book: UserBook) {
+        dao.deleteBook(book)
+    }
+
+    suspend fun getCollectionById(collectionId: String): BookCollection? {
+        return dao.getCollectionById(collectionId)
+    }
+
+    suspend fun deleteAllData() {
+        dao.deleteAllBooks()
+        dao.deleteAllCollections()
+    }
+
+    suspend fun exportData(): String {
+        val books = dao.getAllBooks().first()
+        val collections = dao.getAllCollections().first()
+        val exportedData = ExportedData(books, collections)
+        return Gson().toJson(exportedData)
+    }
+
+    suspend fun importData(json: String) {
+        val exportedData = Gson().fromJson(json, ExportedData::class.java)
+        exportedData.books.forEach { dao.insertBook(it) }
+        exportedData.collections.forEach { dao.insertCollection(it) }
+    }
+
     fun saveUserBook(book: UserBook) {
         scope.launch {
             dao.insertBook(book)

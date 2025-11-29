@@ -59,11 +59,17 @@ class CollectionDetailFragment : Fragment() {
         binding.recyclerBooks.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = bookAdapter
+            isNestedScrollingEnabled = false
         }
     }
 
     private fun setupClickListeners() {
         binding.toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
+
+        binding.btnEditCollection.setOnClickListener {
+            val bundle = bundleOf("collectionId" to collectionId)
+            findNavController().navigate(R.id.createCollectionFragment, bundle)
+        }
 
         binding.btnDeleteCollection.setOnClickListener {
             showDeleteConfirmationDialog()
@@ -112,7 +118,7 @@ class CollectionDetailFragment : Fragment() {
     }
 
     private fun showDeleteConfirmationDialog() {
-        MaterialAlertDialogBuilder(requireContext(), R.style.App_MaterialAlertDialog)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle("Удалить подборку?")
             .setMessage("Это действие нельзя будет отменить.")
             .setNegativeButton("Отмена") { dialog, _ ->
@@ -126,7 +132,7 @@ class CollectionDetailFragment : Fragment() {
     }
 
     private fun showRemoveBookConfirmationDialog(book: UserBook) {
-        MaterialAlertDialogBuilder(requireContext(), R.style.App_MaterialAlertDialog)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle("Удалить книгу из подборки?")
             .setMessage("Вы уверены, что хотите удалить книгу \"${book.title}\" из этой подборки?")
             .setNegativeButton("Отмена", null)

@@ -1,6 +1,5 @@
 package com.example.book.viemodel.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,12 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.book.R
 import com.example.book.data.UserBook
 import com.example.book.databinding.FragmentHomeBinding
 import com.example.book.repos.UserBooksRepository
-import com.example.book.viemodel.AddBook.AddBookActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -28,17 +28,6 @@ class HomeFragment : Fragment() {
 
     private lateinit var bookAdapter: BookAdapter
     private lateinit var searchBookAdapter: BookAdapter
-
-    interface HomeFragmentListener {
-        fun onReadBook(book: UserBook)
-        fun onAddBook()
-    }
-
-    private var listener: HomeFragmentListener? = null
-
-    fun setListener(listener: HomeFragmentListener) {
-        this.listener = listener
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,24 +48,34 @@ class HomeFragment : Fragment() {
     private fun setupAdapters() {
         searchBookAdapter = BookAdapter(
             isGridLayout = false,
-            onBookClick = { book -> listener?.onReadBook(book) },
+            onBookClick = { book ->
+                val bundle = Bundle()
+                bundle.putString("bookId", book.id)
+                findNavController().navigate(R.id.action_global_bookDetailFragment, bundle)
+            },
             onFavoriteClick = { book -> viewModel.toggleFavorite(book) }
         )
 
         bookAdapter = BookAdapter(
             isGridLayout = false,
-            onBookClick = { book -> listener?.onReadBook(book) },
+            onBookClick = { book ->
+                val bundle = Bundle()
+                bundle.putString("bookId", book.id)
+                findNavController().navigate(R.id.action_global_bookDetailFragment, bundle)
+            },
             onFavoriteClick = { book -> viewModel.toggleFavorite(book) }
         )
 
         binding.searchResultsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = searchBookAdapter
+            isNestedScrollingEnabled = false
         }
 
         binding.booksRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = bookAdapter
+            isNestedScrollingEnabled = false
         }
     }
 
@@ -105,7 +104,7 @@ class HomeFragment : Fragment() {
     private fun updateUI(books: List<UserBook>, searchResults: List<UserBook>) {
         val isSearching = viewModel.searchQuery.value.isNotBlank()
 
-    
+
         updateBookCount(books.size)
 
         if (isSearching) {
@@ -143,13 +142,11 @@ class HomeFragment : Fragment() {
         }
 
         binding.addBookButton.setOnClickListener {
-            val intent = Intent(requireContext(), AddBookActivity::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.addBookFragment)
         }
 
         binding.emptyStateAddButton.setOnClickListener {
-            val intent = Intent(requireContext(), AddBookActivity::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.addBookFragment)
         }
     }
 

@@ -83,6 +83,7 @@
 
         <!-- Импорт данных -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnImport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -121,6 +122,7 @@
 
         <!-- Экспорт данных -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnExport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -176,7 +178,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Удалить книгу"
+            android:text="Удалить Данные"
             android:textColor="@color/white"
             app:icon="@drawable/ic_delete"
             app:iconGravity="textStart"

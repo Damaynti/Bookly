@@ -9,8 +9,10 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.book.R
 import com.example.book.data.UserBook
 import com.example.book.databinding.FragmentGenresBinding
 import com.example.book.repos.UserBooksRepository
@@ -29,16 +31,6 @@ class GenresFragment : Fragment() {
     private lateinit var genreAdapter: GenreAdapter
     private lateinit var booksAdapter: BooksByGenreAdapter
 
-    interface GenresFragmentListener {
-        fun onReadBook(book: UserBook)
-    }
-
-    private var listener: GenresFragmentListener? = null
-
-    fun setListener(listener: GenresFragmentListener) {
-        this.listener = listener
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -55,25 +47,35 @@ class GenresFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        genreAdapter = GenreAdapter { genre ->
-            viewModel.selectGenre(genre)
+        genreAdapter = GenreAdapter { genreItem: GenreItem ->
+            viewModel.selectGenre(genreItem.name)
         }
 
         booksAdapter = BooksByGenreAdapter(
-            onBookClick = { book -> listener?.onReadBook(book) },
+            onBookClick = { book ->
+                val bundle = Bundle()
+                bundle.putString("bookId", book.id)
+                findNavController().navigate(R.id.action_global_bookDetailFragment, bundle)
+            },
             onFavoriteClick = { book -> viewModel.toggleFavorite(book) }
         )
 
-        binding.genresRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.genresRecyclerView.adapter = genreAdapter
+        binding.genresRecyclerView.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = genreAdapter
+            isNestedScrollingEnabled = false
+        }
 
-        binding.booksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.booksRecyclerView.adapter = booksAdapter
+        binding.booksRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = booksAdapter
+            isNestedScrollingEnabled = false
+        }
     }
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.genres.collectLatest { genres ->
+            viewModel.genreItems.collectLatest { genres ->
                 genreAdapter.submitList(genres)
                 updateUI(viewModel.filteredBooks.value, genres)
             }
@@ -82,13 +84,13 @@ class GenresFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.filteredBooks.collectLatest { books ->
                 booksAdapter.submitList(books)
-                updateUI(books, viewModel.genres.value)
+                updateUI(books, viewModel.genreItems.value)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isSearching.collectLatest {
-                updateUI(viewModel.filteredBooks.value, viewModel.genres.value)
+                updateUI(viewModel.filteredBooks.value, viewModel.genreItems.value)
             }
         }
 
@@ -97,7 +99,7 @@ class GenresFragment : Fragment() {
                 if (genre != null) {
                     binding.selectedGenreTitle.text = genre
                 }
-                updateUI(viewModel.filteredBooks.value, viewModel.genres.value)
+                updateUI(viewModel.filteredBooks.value, viewModel.genreItems.value)
             }
         }
     }

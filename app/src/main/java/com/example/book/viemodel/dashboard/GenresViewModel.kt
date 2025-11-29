@@ -22,7 +22,7 @@ class GenresViewModel(private val repository: UserBooksRepository) : ViewModel()
         .map { it.isNotEmpty() }
         .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    val genreIcons = mapOf(
+    private val genreIcons = mapOf(
         "Классика" to R.drawable.scroll,
         "Проза" to R.drawable.notes,
         "Фантастика" to R.drawable.ufo,
@@ -43,20 +43,20 @@ class GenresViewModel(private val repository: UserBooksRepository) : ViewModel()
         "Юмор" to R.drawable.humor
     )
 
-    val allGenres = genreIcons.keys.toList()
+    private val allGenres = com.example.book.data.genres
 
-    val genres: StateFlow<List<GenreItem>> = repository.books
+    val genreItems: StateFlow<List<GenreItem>> = repository.books
         .combine(_searchQuery) { books, query ->
             val genresToShow = if (query.isBlank()) {
                 allGenres
             } else {
                 allGenres.filter { it.contains(query, ignoreCase = true) }
             }
-            genresToShow.map { genre ->
+            genresToShow.map { genreName ->
                 GenreItem(
-                    name = genre,
-                    count = books.count { it.genre.equals(genre, ignoreCase = true) },
-                    iconRes = genreIcons[genre] ?: R.drawable.book // Fallback icon
+                    name = genreName,
+                    count = books.count { it.genre.equals(genreName, ignoreCase = true) },
+                    iconRes = genreIcons[genreName] ?: R.drawable.book // Fallback icon
                 )
             }
         }
