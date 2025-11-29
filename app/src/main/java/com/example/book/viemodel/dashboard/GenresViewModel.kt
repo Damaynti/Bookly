@@ -57,7 +57,7 @@ class GenresViewModel(private val repository: UserBooksRepository) : ViewModel()
         _searchQuery.value = query
     }
 
-    fun selectGenre(genre: String) {
+    fun selectGenre(genre: String?) {
         _selectedGenre.value = genre
     }
 

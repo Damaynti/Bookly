@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.book.R
 import com.example.book.data.UserBook
 import com.example.book.databinding.ItemFavBookBinding
+import com.example.book.utils.formatDate
 
 class FavAdapter(
     private val onFavoriteClick: (UserBook) -> Unit,
@@ -26,26 +28,30 @@ class FavAdapter(
     inner class FavViewHolder(private val binding: ItemFavBookBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(book: UserBook) = with(binding) {
-            tvTitle.text = book.title
-            tvAuthor.text = book.author
-            tvGenre.text = book.genre
+        fun bind(book: UserBook) {
+            binding.bookTitle.text = book.title
+            binding.bookAuthor.text = book.author
+            binding.bookGenre.text = book.genre
+            binding.createdAt.text = formatDate(book.createdAt)
 
             // Загрузка обложки (если есть)
-            Glide.with(root.context)
+            Glide.with(binding.root.context)
                 .load(book.coverImage)
                 .centerCrop()
-                .into(ivCover)
+                .placeholder(R.drawable.book)
+                .error(R.drawable.book)
+                .into(binding.bookCover)
 
             // Кнопка "Читать"
-            btnRead.setOnClickListener {
+            binding.root.setOnClickListener {
                 onReadClick(book)
             }
 
             // Сердце (удалить из избранного)
-            btnFavorite.setOnClickListener {
+            binding.favoriteButton.setOnClickListener {
                 onFavoriteClick(book)
             }
+            binding.favoriteButton.setImageResource(R.drawable.ic_fav_red)
         }
     }
 

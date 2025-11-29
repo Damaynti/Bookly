@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.book.data.UserBook
-import com.example.book.repos.UserBooksRepository
 import com.example.book.databinding.FragmentGenresBinding
+import com.example.book.repos.UserBooksRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,7 +39,9 @@ class GenresFragment : Fragment() {
         this.listener = listener
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentGenresBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -47,6 +51,7 @@ class GenresFragment : Fragment() {
         setupAdapters()
         setupObservers()
         setupSearch()
+        setupBackButton()
     }
 
     private fun setupAdapters() {
@@ -62,7 +67,7 @@ class GenresFragment : Fragment() {
         binding.genresRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.genresRecyclerView.adapter = genreAdapter
 
-        binding.booksRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.booksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.booksRecyclerView.adapter = booksAdapter
     }
 
@@ -83,11 +88,35 @@ class GenresFragment : Fragment() {
                 updateUI(viewModel.filteredBooks.value)
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.selectedGenre.collectLatest { genre ->
+                if (genre != null) {
+                    binding.selectedGenreTitle.text = genre
+                }
+                updateUI(viewModel.filteredBooks.value)
+            }
+        }
     }
 
     private fun setupSearch() {
         binding.searchEditText.doAfterTextChanged { text ->
             viewModel.setSearchQuery(text.toString())
+        }
+    }
+
+    private fun setupBackButton() {
+        binding.backButton.setOnClickListener {
+            viewModel.selectGenre(null)
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (viewModel.selectedGenre.value != null) {
+                viewModel.selectGenre(null)
+            } else {
+                isEnabled = false
+                requireActivity().onBackPressed()
+            }
         }
     }
 
@@ -98,9 +127,13 @@ class GenresFragment : Fragment() {
         if (searching || genreSelected) {
             binding.genresRecyclerView.visibility = View.GONE
             binding.booksRecyclerView.visibility = View.VISIBLE
+            binding.subtitleText.visibility = View.GONE
+            binding.selectedGenreHeader.visibility = if (genreSelected) View.VISIBLE else View.GONE
         } else {
             binding.genresRecyclerView.visibility = View.VISIBLE
             binding.booksRecyclerView.visibility = View.GONE
+            binding.subtitleText.visibility = View.VISIBLE
+            binding.selectedGenreHeader.visibility = View.GONE
         }
 
         binding.emptyState.visibility = if (searching && books.isEmpty()) View.VISIBLE else View.GONE
