@@ -107,10 +107,10 @@ class UserBooksRepository(context: Context) {
                     dao.insertAppSettings(AppSettings())
                 }
 
-                if (booksCount == 0) {
-                    initializeSampleData()
-                    Log.d(TAG, "Демо-данные добавлены.")
-                }
+//                if (booksCount == 0) {
+//                    initializeSampleData()
+//                    Log.d(TAG, "Демо-данные добавлены.")
+//                }
 
             } catch (e: Exception) {
                 Log.e(TAG, "Ошибка при инициализации БД: ${e.message}", e)
