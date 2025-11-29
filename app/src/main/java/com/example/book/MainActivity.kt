@@ -53,12 +53,5 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        val repository = UserBooksRepository(this)
-
-        repository.initializeSampleData()
-
-
-
     }
 }
