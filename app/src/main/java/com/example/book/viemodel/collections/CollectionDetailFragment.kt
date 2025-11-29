@@ -50,7 +50,11 @@ class CollectionDetailFragment : Fragment() {
     private fun setupRecyclerView() {
         bookAdapter = BookAdapter(
             isGridLayout = false,
-            onBookClick = { /* TODO: Handle book click */ },
+            onBookClick = { book ->
+                val bundle = Bundle()
+                bundle.putString("bookId", book.id)
+                findNavController().navigate(R.id.action_global_bookDetailFragment, bundle)
+            },
             onFavoriteClick = { /* TODO: Handle favorite click */ },
             onBookLongClick = { book ->
                 showRemoveBookConfirmationDialog(book)
