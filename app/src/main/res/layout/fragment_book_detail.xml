@@ -53,6 +53,14 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_heart_outline"
                 android:contentDescription="@string/favorite" />
+
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_trash"
+                android:contentDescription="@string/delete_book" />
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -185,16 +193,6 @@
                         android:textAppearance="?attr/textAppearanceBody2" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-            <!-- Delete button -->
-            <Button
-                android:id="@+id/btnDelete"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/delete_book"
-                android:textColor="@android:color/holo_red_dark"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

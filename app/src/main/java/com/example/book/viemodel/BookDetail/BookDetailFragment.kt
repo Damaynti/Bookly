@@ -84,13 +84,13 @@ class BookDetailFragment : Fragment() {
                 val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 Glide.with(requireContext())
                     .load(decodedImage)
-                    .placeholder(R.drawable.book_placeholder)
+                    .placeholder(R.drawable.book)
                     .into(binding.imgCover)
             } catch (e: Exception) {
-                binding.imgCover.setImageResource(R.drawable.book_placeholder)
+                binding.imgCover.setImageResource(R.drawable.book)
             }
         } else {
-            binding.imgCover.setImageResource(R.drawable.book_placeholder)
+            binding.imgCover.setImageResource(R.drawable.book)
         }
 
         val favoriteIcon = if (book.isFavorite) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline
