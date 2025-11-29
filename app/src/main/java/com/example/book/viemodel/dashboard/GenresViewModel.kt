@@ -47,27 +47,27 @@ class GenresViewModel(private val repository: UserBooksRepository) : ViewModel()
 
     val genres: StateFlow<List<GenreItem>> = repository.books
         .combine(_searchQuery) { books, query ->
-            if (query.isBlank()) {
-                allGenres.map { genre ->
-                    GenreItem(
-                        name = genre,
-                        count = books.count { it.genre.equals(genre, ignoreCase = true) },
-                        iconRes = genreIcons[genre] ?: R.drawable.book // Fallback icon
-                    )
-                }
-            } else emptyList()
+            val genresToShow = if (query.isBlank()) {
+                allGenres
+            } else {
+                allGenres.filter { it.contains(query, ignoreCase = true) }
+            }
+            genresToShow.map { genre ->
+                GenreItem(
+                    name = genre,
+                    count = books.count { it.genre.equals(genre, ignoreCase = true) },
+                    iconRes = genreIcons[genre] ?: R.drawable.book // Fallback icon
+                )
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     val filteredBooks: StateFlow<List<UserBook>> = repository.books
         .combine(_selectedGenre) { books, genre ->
-            val query = _searchQuery.value
-            when {
-                query.isNotBlank() -> books.filter {
-                    it.title.contains(query, true) || it.author.contains(query, true)
-                }
-                genre != null -> books.filter { it.genre.equals(genre, true) }
-                else -> emptyList()
+            if (genre != null) {
+                books.filter { it.genre.equals(genre, ignoreCase = true) }
+            } else {
+                emptyList()
             }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())

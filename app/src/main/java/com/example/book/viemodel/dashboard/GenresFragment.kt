@@ -73,19 +73,22 @@ class GenresFragment : Fragment() {
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.genres.collectLatest { genreAdapter.submitList(it) }
+            viewModel.genres.collectLatest { genres ->
+                genreAdapter.submitList(genres)
+                updateUI(viewModel.filteredBooks.value, genres)
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.filteredBooks.collectLatest { books ->
                 booksAdapter.submitList(books)
-                updateUI(books)
+                updateUI(books, viewModel.genres.value)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isSearching.collectLatest {
-                updateUI(viewModel.filteredBooks.value)
+                updateUI(viewModel.filteredBooks.value, viewModel.genres.value)
             }
         }
 
@@ -94,7 +97,7 @@ class GenresFragment : Fragment() {
                 if (genre != null) {
                     binding.selectedGenreTitle.text = genre
                 }
-                updateUI(viewModel.filteredBooks.value)
+                updateUI(viewModel.filteredBooks.value, viewModel.genres.value)
             }
         }
     }
@@ -120,23 +123,23 @@ class GenresFragment : Fragment() {
         }
     }
 
-    private fun updateUI(books: List<UserBook>) {
+    private fun updateUI(books: List<UserBook>, genres: List<GenreItem>) {
         val searching = viewModel.isSearching.value
         val genreSelected = viewModel.selectedGenre.value != null
 
-        if (searching || genreSelected) {
+        if (genreSelected) {
             binding.genresRecyclerView.visibility = View.GONE
             binding.booksRecyclerView.visibility = View.VISIBLE
             binding.subtitleText.visibility = View.GONE
-            binding.selectedGenreHeader.visibility = if (genreSelected) View.VISIBLE else View.GONE
+            binding.selectedGenreHeader.visibility = View.VISIBLE
+            binding.emptyState.visibility = if (books.isEmpty()) View.VISIBLE else View.GONE
         } else {
             binding.genresRecyclerView.visibility = View.VISIBLE
             binding.booksRecyclerView.visibility = View.GONE
-            binding.subtitleText.visibility = View.VISIBLE
+            binding.subtitleText.visibility = if (searching) View.GONE else View.VISIBLE
             binding.selectedGenreHeader.visibility = View.GONE
+            binding.emptyState.visibility = if (searching && genres.isEmpty()) View.VISIBLE else View.GONE
         }
-
-        binding.emptyState.visibility = if (searching && books.isEmpty()) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

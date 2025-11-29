@@ -1,11 +1,13 @@
 package com.example.book.viemodel.fav
 
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.book.R
 import com.example.book.data.UserBook
 import com.example.book.databinding.ItemFavBookBinding
@@ -35,12 +37,7 @@ class FavAdapter(
             binding.createdAt.text = formatDate(book.createdAt)
 
             // Загрузка обложки (если есть)
-            Glide.with(binding.root.context)
-                .load(book.coverImage)
-                .centerCrop()
-                .placeholder(R.drawable.book)
-                .error(R.drawable.book)
-                .into(binding.bookCover)
+            loadImageFromBase64(book.coverImage, binding.bookCover)
 
             // Кнопка "Читать"
             binding.root.setOnClickListener {
@@ -52,6 +49,22 @@ class FavAdapter(
                 onFavoriteClick(book)
             }
             binding.favoriteButton.setImageResource(R.drawable.ic_fav_red)
+        }
+    }
+
+    private fun loadImageFromBase64(coverImage: String, imageView: ImageView) {
+        if (coverImage.isNotEmpty()) {
+            try {
+                val imageBytes = Base64.decode(coverImage, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                imageView.setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                // В случае ошибки используем fallback изображение
+                imageView.setImageResource(R.drawable.book)
+            }
+        } else {
+            // Если изображение пустое, используем fallback
+            imageView.setImageResource(R.drawable.book)
         }
     }
 
